@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Multipágina</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .btn-prev {
+            background-color: #2196F3;
+        }
+        
+        .btn-prev:hover {
+            background-color: #0b7dda;
+        }
+        
+        .btn-danger {
+            background-color: #f44336;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .result-table th, .result-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .result-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .result-container {
+            margin-top: 20px;
+        }
+        
+        .family-member, .condition, .internment {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .remove-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .remove-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Datos Personales, Familiares y Médicos</h1>
+        
+        <form id="multiStepForm">
+            <!-- Página 1: Datos Personales -->
+            <div id="step1" class="form-step active">
+                <h2>Página 1: Datos Personales</h2>
+                <div class="form-group">
+                    <label for="name">Nombre Completo:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="cedula">Cédula:</label>
+                    <input type="text" id="cedula" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Edad:</label>
+                    <input type="number" id="age" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Género:</label>
+                    <select id="gender" required>
+                        <option value="">Seleccione...</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">Dirección:</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Teléfono:</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+                <button type="button" id="next1" class="btn-next">Siguiente</button>
+            </div>
+            
+            <!-- Página 2: Familiares -->
+            <div id="step2" class="form-step">
+                <h2>Página 2: Familiares</h2>
+                <div id="familyMembersContainer">
+                    <div class="family-member">
+                        <div class="form-group">
+                            <label for="familyName1">Nombre:</label>
+                            <input type="text" class="family-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="familyRelationship1">Parentesco:</label>
+                            <input type="text" class="family-relationship" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="familyAge1">Edad:</label>
+                            <input type="number" class="family-age" required>
+                        </div>
+                        <button type="button" class="remove-btn">Eliminar</button>
+                    </div>
+                </div>
+                <button type="button" id="addFamilyMember">Agregar Familiar</button>
+                <br><br>
+                <button type="button" id="prev1" class="btn-prev">Anterior</button>
+                <button type="button" id="next2" class="btn-next">Siguiente</button>
+            </div>
+            
+            <!-- Página 3: Condiciones Pre-Existentes de Salud -->
+            <div id="step3" class="form-step">
+                <h2>Página 3: Condiciones Pre-Existentes de Salud</h2>
+                <div id="conditionsContainer">
+                    <div class="condition">
+                        <div class="form-group">
+                            <label for="conditionName1">Nombre de la Enfermedad:</label>
+                            <input type="text" class="condition-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="conditionTime1">Tiempo con la Enfermedad (años):</label>
+                            <input type="number" class="condition-time" required>
+                        </div>
+                        <button type="button" class="remove-btn">Eliminar</button>
+                    </div>
+                </div>
+                <button type="button" id="addCondition">Agregar Condición</button>
+                <br><br>
+                <button type="button" id="prev2" class="btn-prev">Anterior</button>
+                <button type="button" id="next3" class="btn-next">Siguiente</button>
+            </div>
+            
+            <!-- Página 4: Internamientos Realizados -->
+            <div id="step4" class="form-step">
+                <h2>Página 4: Internamientos Realizados</h2>
+                <div id="internmentsContainer">
+                    <div class="internment">
+                        <div class="form-group">
+                            <label for="internmentDate1">Fecha:</label>
+                            <input type="date" class="internment-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="internmentCenter1">Centro Médico:</label>
+                            <input type="text" class="internment-center" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="internmentDiagnosis1">Diagnóstico:</label>
+                            <input type="text" class="internment-diagnosis" required>
+                        </div>
+                        <button type="button" class="remove-btn">Eliminar</button>
+                    </div>
+                </div>
+                <button type="button" id="addInternment">Agregar Internamiento</button>
+                <br><br>
+                <button type="button" id="prev3" class="btn-prev">Anterior</button>
+                <button type="button" id="next4" class="btn-next">Siguiente</button>
+            </div>
+            
+            <!-- Página 5: Resultados -->
+            <div id="step5" class="form-step">
+                <h2>Página 5: Resultados</h2>
+                <div id="resultsContainer" class="result-container">
+                    <!-- Resultados se mostrarán aquí -->
+                </div>
+                <button type="button" id="prev4" class="btn-prev">Anterior</button>
+                <button type="button" id="saveBtn">Grabar</button>
+                <button type="button" id="editBtn">Editar</button>
+                <button type="button" id="newPatientBtn">Nuevo Paciente</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentStep = 1;
+        let formData = {
+            personal: {},
+            family: [],
+            conditions: [],
+            internments: []
+        };
+        let isEditing = false;
+
+        // Funciones para manejar los pasos del formulario
+        function showStep(step) {
+            // Ocultar todos los pasos
+            document.querySelectorAll('.form-step').forEach(stepEl => {
+                stepEl.classList.remove('active');
+            });
+            
+            // Mostrar el paso actual
+            document.getElementById(`step${step}`).classList.add('active');
+            currentStep = step;
+        }
+
+        // Funciones para agregar y eliminar elementos
+        function addFamilyMember() {
+            const container = document.getElementById('familyMembersContainer');
+            const newMember = document.createElement('div');
+            newMember.className = 'family-member';
+            newMember.innerHTML = `
+                <div class="form-group">
+                    <label>Nombre:</label>
+                    <input type="text" class="family-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Parentesco:</label>
+                    <input type="text" class="family-relationship" required>
+                </div>
+                <div class="form-group">
+                    <label>Edad:</label>
+                    <input type="number" class="family-age" required>
+                </div>
+                <button type="button" class="remove-btn">Eliminar</button>
+            `;
+            container.appendChild(newMember);
+            
+            // Agregar evento al botón eliminar
+            newMember.querySelector('.remove-btn').addEventListener('click', function() {
+                container.removeChild(newMember);
+            });
+        }
+
+        function addCondition() {
+            const container = document.getElementById('conditionsContainer');
+            const newCondition = document.createElement('div');
+            newCondition.className = 'condition';
+            newCondition.innerHTML = `
+                <div class="form-group">
+                    <label>Nombre de la Enfermedad:</label>
+                    <input type="text" class="condition-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Tiempo con la Enfermedad (años):</label>
+                    <input type="number" class="condition-time" required>
+                </div>
+                <button type="button" class="remove-btn">Eliminar</button>
+            `;
+            container.appendChild(newCondition);
+            
+            // Agregar evento al botón eliminar
+            newCondition.querySelector('.remove-btn').addEventListener('click', function() {
+                container.removeChild(newCondition);
+            });
+        }
+
+        function addInternment() {
+            const container = document.getElementById('internmentsContainer');
+            const newInternment = document.createElement('div');
+            newInternment.className = 'internment';
+            newInternment.innerHTML = `
+                <div class="form-group">
+                    <label>Fecha:</label>
+                    <input type="date" class="internment-date" required>
+                </div>
+                <div class="form-group">
+                    <label>Centro Médico:</label>
+                    <input type="text" class="internment-center" required>
+                </div>
+                <div class="form-group">
+                    <label>Diagnóstico:</label>
+                    <input type="text" class="internment-diagnosis" required>
+                </div>
+                <button type="button" class="remove-btn">Eliminar</button>
+            `;
+            container.appendChild(newInternment);
+            
+            // Agregar evento al botón eliminar
+            newInternment.querySelector('.remove-btn').addEventListener('click', function() {
+                container.removeChild(newInternment);
+            });
+        }
+
+        // Función para guardar los datos del formulario
+        function saveFormData() {
+            // Datos personales
+            formData.personal = {
+                name: document.getElementById('name').value,
+                cedula: document.getElementById('cedula').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value
+            };
+            
+            // Familiares
+            formData.family = [];
+            document.querySelectorAll('.family-member').forEach(member => {
+                formData.family.push({
+                    name: member.querySelector('.family-name').value,
+                    relationship: member.querySelector('.family-relationship').value,
+                    age: member.querySelector('.family-age').value
+                });
+            });
+            
+            // Condiciones pre-existentes
+            formData.conditions = [];
+            document.querySelectorAll('.condition').forEach(condition => {
+                formData.conditions.push({
+                    name: condition.querySelector('.condition-name').value,
+                    time: condition.querySelector('.condition-time').value
+                });
+            });
+            
+            // Internamientos
+            formData.internments = [];
+            document.querySelectorAll('.internment').forEach(internment => {
+                formData.internments.push({
+                    date: internment.querySelector('.internment-date').value,
+                    center: internment.querySelector('.internment-center').value,
+                    diagnosis: internment.querySelector('.internment-diagnosis').value
+                });
+            });
+            
+            // Mostrar resultados
+            showResults();
+        }
+
+        function showResults() {
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+            
+            // Datos personales
+            const personalDiv = document.createElement('div');
+            personalDiv.innerHTML = `
+                <h3>Datos Personales</h3>
+                <p><strong>Nombre:</strong> ${formData.personal.name}</p>
+                <p><strong>Cédula:</strong> ${formData.personal.cedula}</p>
+                <p><strong>Edad:</strong> ${formData.personal.age}</p>
+                <p><strong>Género:</strong> ${formData.personal.gender}</p>
+                <p><strong>Dirección:</strong> ${formData.personal.address}</p>
+                <p><strong>Teléfono:</strong> ${formData.personal.phone}</p>
+                <p><strong>Email:</strong> ${formData.personal.email}</p>
+            `;
+            resultsContainer.appendChild(personalDiv);
+            
+            // Familiares
+            if (formData.family.length > 0) {
+                const familyDiv = document.createElement('div');
+                familyDiv.innerHTML = '<h3>Familiares</h3>';
+                const familyTable = document.createElement('table');
+                familyTable.className = 'result-table';
+                familyTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Parentesco</th>
+                            <th>Edad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                
+                formData.family.forEach(familyMember => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${familyMember.name}</td>
+                        <td>${familyMember.relationship}</td>
+                        <td>${familyMember.age}</td>
+                    `;
+                    familyTable.querySelector('tbody').appendChild(row);
+                });
+                
+                familyDiv.appendChild(familyTable);
+                resultsContainer.appendChild(familyDiv);
+            }
+            
+            // Condiciones pre-existentes
+            if (formData.conditions.length > 0) {
+                const conditionsDiv = document.createElement('div');
+                conditionsDiv.innerHTML = '<h3>Condiciones Pre-Existentes de Salud</h3>';
+                const conditionsTable = document.createElement('table');
+                conditionsTable.className = 'result-table';
+                conditionsTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Enfermedad</th>
+                            <th>Tiempo (años)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                
+                formData.conditions.forEach(condition => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${condition.name}</td>
+                        <td>${condition.time}</td>
+                    `;
+                    conditionsTable.querySelector('tbody').appendChild(row);
+                });
+                
+                conditionsDiv.appendChild(conditionsTable);
+                resultsContainer.appendChild(conditionsDiv);
+            }
+            
+            // Internamientos
+            if (formData.internments.length > 0) {
+                const internmentsDiv = document.createElement('div');
+                internmentsDiv.innerHTML = '<h3>Internamientos Realizados</h3>';
+                const internmentsTable = document.createElement('table');
+                internmentsTable.className = 'result-table';
+                internmentsTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Centro Médico</th>
+                            <th>Diagnóstico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                
+                formData.internments.forEach(internment => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${internment.date}</td>
+                        <td>${internment.center}</td>
+                        <td>${internment.diagnosis}</td>
+                    `;
+                    internmentsTable.querySelector('tbody').appendChild(row);
+                });
+                
+                internmentsDiv.appendChild(internmentsTable);
+                resultsContainer.appendChild(internmentsDiv);
+            }
+        }
+
+        function editFormData() {
+            isEditing = true;
+            showStep(1);
+        }
+
+        function resetForm() {
+            // Reiniciar los datos del formulario
+            formData = {
+                personal: {},
+                family: [],
+                conditions: [],
+                internments: []
+            };
+            
+            // Limpiar los campos de la primera página
+            document.getElementById('name').value = '';
+            document.getElementById('cedula').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('email').value = '';
+            
+            // Limpiar los contenedores de familiares, condiciones e internamientos
+            document.getElementById('familyMembersContainer').innerHTML = `
+                <div class="family-member">
+                    <div class="form-group">
+                        <label for="familyName1">Nombre:</label>
+                        <input type="text" class="family-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="familyRelationship1">Parentesco:</label>
+                        <input type="text" class="family-relationship" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="familyAge1">Edad:</label>
+                        <input type="number" class="family-age" required>
+                    </div>
+                    <button type="button" class="remove-btn">Eliminar</button>
+                </div>
+            `;
+            
+            document.getElementById('conditionsContainer').innerHTML = `
+                <div class="condition">
+                    <div class="form-group">
+                        <label for="conditionName1">Nombre de la Enfermedad:</label>
+                        <input type="text" class="condition-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="conditionTime1">Tiempo con la Enfermedad (años):</label>
+                        <input type="number" class="condition-time" required>
+                    </div>
+                    <button type="button" class="remove-btn">Eliminar</button>
+                </div>
+            `;
+            
+            document.getElementById('internmentsContainer').innerHTML = `
+                <div class="internment">
+                    <div class="form-group">
+                        <label for="internmentDate1">Fecha:</label>
+                        <input type="date" class="internment-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="internmentCenter1">Centro Médico:</label>
+                        <input type="text" class="internment-center" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="internmentDiagnosis1">Diagnóstico:</label>
+                        <input type="text" class="internment-diagnosis" required>
+                    </div>
+                    <button type="button" class="remove-btn">Eliminar</button>
+                </div>
+            `;
+            
+            // Agregar eventos a los nuevos botones eliminar
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            });
+            
+            // Volver a la primera página
+            showStep(1);
+        }
+
+        // Eventos
+        document.getElementById('next1').addEventListener('click', function() {
+            saveFormData();
+            showStep(2);
+        });
+        
+        document.getElementById('next2').addEventListener('click', function() {
+            saveFormData();
+            showStep(3);
+        });
+        
+        document.getElementById('next3').addEventListener('click', function() {
+            saveFormData();
+            showStep(4);
+        });
+        
+        document.getElementById('next4').addEventListener('click', function() {
+            saveFormData();
+            showStep(5);
+        });
+        
+        document.getElementById('prev1').addEventListener('click', function() {
+            showStep(1);
+        });
+        
+        document.getElementById('prev2').addEventListener('click', function() {
+            showStep(2);
+        });
+        
+        document.getElementById('prev3').addEventListener('click', function() {
+            showStep(3);
+        });
+        
+        document.getElementById('prev4').addEventListener('click', function() {
+            showStep(4);
+        });
+        
+        document.getElementById('addFamilyMember').addEventListener('click', addFamilyMember);
+        document.getElementById('addCondition').addEventListener('click', addCondition);
+        document.getElementById('addInternment').addEventListener('click', addInternment);
+        
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            saveFormData();
+            alert('Datos grabados correctamente!');
+        });
+        
+        document.getElementById('editBtn').addEventListener('click', editFormData);
+        
+        document.getElementById('newPatientBtn').addEventListener('click', resetForm);
+        
+        // Agregar eventos a los botones eliminar dinámicamente
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-btn')) {
+                e.target.parentElement.remove();
+            }
+        });
+    </script>
+</body>
+</html>
